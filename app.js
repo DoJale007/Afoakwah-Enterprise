@@ -1,181 +1,101 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Mobile Menu Toggle
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('navMenu');
-    
+
     hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
         navMenu.classList.toggle('active');
     });
 
-    // Close menu when clicking on a link
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
             navMenu.classList.remove('active');
         });
     });
 
     // Navbar scroll effect
     window.addEventListener('scroll', () => {
-        const navbar = document.querySelector('.navbar');
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
+        document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50);
     });
 
-    // Smooth scroll for navigation links
+    // Smooth scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
+                window.scrollTo({
+                    top: target.offsetTop - 80,
+                    behavior: 'smooth'
                 });
             }
         });
     });
 
-    // Intersection Observer for fade-in animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
+    // Fade-in observer
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
+            if (entry.isIntersecting) entry.target.classList.add('visible');
         });
-    }, observerOptions);
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    document.querySelectorAll('.fade-in').forEach(el => {
-        observer.observe(el);
-    });
-
-    // Contact Form Validation and Submission
-     // Contact Form with Formspree AJAX & Popup
+    // MAIN FIX: Contact Form with AJAX + Success Popup
     const contactForm = document.getElementById('contactForm');
     const successPopup = document.getElementById('successPopup');
     const popupName = document.getElementById('popupName');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const btnLoading = submitBtn.querySelector('.btn-loading');
 
-    contactForm.addEventListener('submit', async function(e) {
+    contactForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-        
-        // Get form values
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const message = document.getElementById('message').value.trim();
-        
-        // Validation
-        if (!name || !email || !message) {
-            alert('Please fill in all required fields.');
-            return;
-        }
-        
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            alert('Please enter a valid email address.');
-            return;
-        }
-        
-        if (phone && !/^[\d\s\-\+\(\)]+$/.test(phone)) {
-            alert('Please enter a valid phone number.');
-            return;
-        }
-        
-        // Submit to Formspree
-        const formData = new FormData(contactForm);
-        
+
+        // Show loading
+        btnText.style.display = 'none';
+        btnLoading.style.display = 'inline-block';
+        submitBtn.disabled = true;
+
         try {
             const response = await fetch(contactForm.action, {
                 method: 'POST',
-                body: formData,
+                body: new FormData(contactForm),
                 headers: { 'Accept': 'application/json' }
             });
-            
+
             if (response.ok) {
-                // Show popup with user's name
+                // SUCCESS: Show popup with name
+                const name = document.getElementById('name').value.trim().split(' ')[0] || 'Customer';
                 popupName.textContent = name;
-                successPopup.style.display = 'flex';
+                successPopup.classList.add('active');  // Smooth show
                 contactForm.reset();
             } else {
-                alert('Sorry, there was an error. Please try again.');
+                alert('Error sending message. Please try WhatsApp or call us.');
             }
-        } catch (error) {
-            console.error('Form submission error:', error);
-            alert('Network error. Please check your connection.');
+        } catch (err) {
+            alert('No internet. Please check your connection and try again.');
+        } finally {
+            // Hide loading
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
+            submitBtn.disabled = false;
         }
     });
 
-    // Close popup functions
-    window.closePopup = function() {
-        successPopup.style.display = 'none';
+    // Close popup function
+    window.closePopup = function () {
+        successPopup.classList.remove('active');
     };
-    
-    // Close on overlay click
-    successPopup.addEventListener('click', function(e) {
-        if (e.target === successPopup) {
-            closePopup();
-        }
+
+    // Close on overlay click or ESC
+    successPopup.addEventListener('click', (e) => {
+        if (e.target === successPopup) closePopup();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closePopup();
     });
 
-    // Floating WhatsApp click tracking (optional)
-    document.querySelector('.whatsapp-float').addEventListener('click', function() {
-        console.log('WhatsApp button clicked - redirecting to chat');
-        
-    });
-
-    // Hero button click tracking
-    document.querySelectorAll('.hero-buttons .btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            console.log('Hero CTA clicked:', this.textContent.trim());
-        });
-    });
-
-    // Gallery image click handler
-    document.querySelectorAll('.gallery-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const img = this.querySelector('img');
-            const title = this.querySelector('.gallery-overlay p').textContent;
-            console.log('Gallery image clicked:', title);
-            
-        });
-    });
-
-    // Add loading animation
-    window.addEventListener('load', () => {
-        document.body.classList.add('loaded');
-    });
-
-    // Performance optimization: Lazy load images
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src || img.src;
-                    observer.unobserve(img);
-                }
-            });
-        });
-
-        // Observe gallery images
-        document.querySelectorAll('.gallery-item img').forEach(img => {
-            imageObserver.observe(img);
-        });
-    }
-
-    // Set current year in footer
-    const currentYear = new Date().getFullYear();
-    const footerYear = document.querySelector('.footer-bottom p');
-    if (footerYear) {
-        footerYear.innerHTML = `&copy; ${currentYear} Afoakwah Ernest Enterprise. All rights reserved.`;
-    }
-
-    console.log('Afoakwah Ernest Enterprise website loaded successfully!');
+    console.log('Afoakwah Ernest Enterprise Website – Fully Functional!');
 });
