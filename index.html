@@ -22,7 +22,9 @@
     <nav class="navbar">
         <div class="container">
             <div class="logo">
-                <span class="logo-text">AEE</span>
+                <a href="#home">
+                    <img src="images/logo2.svg" alt="AEE" class="logo-img">
+                </a>
             </div>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home" class="nav-link">Home</a></li>
@@ -178,7 +180,7 @@
             <div class="contact-content">
                 <div class="contact-info fade-in">
                     <h3>Get In Touch</h3>
-                    <p>We're here to help with all your trading needs. Reach out to us through any of our contact
+                    <p class="contact-prgrh">We're here to help with all your trading needs. Reach out to us through any of our contact
                         channels.</p>
 
                     <div class="contact-item">
@@ -215,11 +217,22 @@
                 </div>
 
                 <div class="contact-form fade-in">
-                    <form id="contactForm">
+                    <form  action="https://formspree.io/f/myzvgjbe" method="POST">
+                        <!-- Hidden Formspree configuration -->
+                        <input type="hidden" name="_subject" value="New Contact from AEE Website">
+                        <input type="hidden" name="_next" value="https://www.afoakwahernestenterprise.com/thank-you.html">
+                        <input type="hidden" name="_replyto" value=""> <!-- Formspree will fill this -->
+                        <input type="hidden" name="_template" value="box">
+                
+                        <!--  Fields-->
                         <input type="text" id="name" name="name" placeholder="Your Name" required>
                         <input type="email" id="email" name="email" placeholder="Your Email" required>
                         <input type="tel" id="phone" name="phone" placeholder="Your Phone">
                         <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+                
+                        <!-- Formspree anti-spam -->
+                        <input type="text" name="_gotcha" style="display:none">
+                
                         <button type="submit" class="btn btn-primary">Send Message</button>
                     </form>
                 </div>
@@ -258,7 +271,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Afoakwah Ernest Enterprise. All rights reserved.</p>
+                <p>© 2024 Afoakwah Ernest Enterprise. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -267,6 +280,17 @@
     <a href="https://wa.me/233598330593" target="_blank" class="whatsapp-float" title="Chat with us on WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
+
+
+    <!-- Success Popup Modal -->
+    <div id="successPopup" class="popup-overlay">
+        <div class="popup-content">
+            <i class="fas fa-check-circle"></i>
+            <h3>Message Sent Successfully!</h3>
+            <p>Thank you for contacting us, <span id="popupName"></span>. We'll get back to you soon.</p>
+            <button onclick="closePopup()" class="btn btn-primary">OK</button>
+        </div>
+    </div>
 
     <!-- JavaScript -->
     <script src="app.js"></script>

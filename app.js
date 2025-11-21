@@ -57,9 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Contact Form Validation and Submission
+     // Contact Form with Formspree AJAX & Popup
     const contactForm = document.getElementById('contactForm');
-    
-    contactForm.addEventListener('submit', function(e) {
+    const successPopup = document.getElementById('successPopup');
+    const popupName = document.getElementById('popupName');
+
+    contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         // Get form values
@@ -74,33 +77,51 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             alert('Please enter a valid email address.');
             return;
         }
         
-        // Phone validation (optional field)
         if (phone && !/^[\d\s\-\+\(\)]+$/.test(phone)) {
             alert('Please enter a valid phone number.');
             return;
         }
         
-        // Success message (in production, this would send to a server)
-        alert(`Thank you, ${name}! Your message has been received. We will contact you soon at ${email}.`);
+        // Submit to Formspree
+        const formData = new FormData(contactForm);
         
-        // Reset form
-        contactForm.reset();
-        
-        // Log the submission (remove in production)
-        console.log('Contact Form Submission:', {
-            name,
-            email,
-            phone,
-            message,
-            timestamp: new Date().toISOString()
-        });
+        try {
+            const response = await fetch(contactForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            });
+            
+            if (response.ok) {
+                // Show popup with user's name
+                popupName.textContent = name;
+                successPopup.style.display = 'flex';
+                contactForm.reset();
+            } else {
+                alert('Sorry, there was an error. Please try again.');
+            }
+        } catch (error) {
+            console.error('Form submission error:', error);
+            alert('Network error. Please check your connection.');
+        }
+    });
+
+    // Close popup functions
+    window.closePopup = function() {
+        successPopup.style.display = 'none';
+    };
+    
+    // Close on overlay click
+    successPopup.addEventListener('click', function(e) {
+        if (e.target === successPopup) {
+            closePopup();
+        }
     });
 
     // Floating WhatsApp click tracking (optional)
