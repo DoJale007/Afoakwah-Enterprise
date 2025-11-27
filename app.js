@@ -84,6 +84,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    document.querySelectorAll(".photo-gallery-grid img").forEach(img => {
+    img.addEventListener("click", () => {
+        window.open(img.src, "_blank");
+    });
+    });
+    
+
     // Close popup function
     window.closePopup = function () {
         successPopup.classList.remove('active');
@@ -99,3 +106,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     console.log('Afoakwah Ernest Enterprise Website – Fully Functional!');
 });
+
+
+
