@@ -6,18 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="Afoakwah Ernest Enterprise - General Trading, Automobile Sales, Spare Parts & Logistics Services in Tema, Ghana">
-    <meta name="keywords" content="automobile sales, car spare parts, logistics services, general trading, Tema Ghana">
     <meta name="author" content="Afoakwah Ernest Enterprise">
     <title>Afoakwah Ernest Enterprise - Empowering Growth</title>
 
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="images/favicon.jpeg" type="image/x-icon">
-
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="images/favicon.jpeg" type="image/x-icon">
 </head>
 
 <body>
@@ -136,8 +135,7 @@
         <div class="container">
             <h2 class="section-title">Gallery</h2>
             <div class="gallery-grid" id="galleryGrid">
-
-                <!-- Category: Premium Automobiles -->
+                <!-- Category: Premium Automobiles (Placeholder) -->
                 <div class="gallery-item fade-in" data-category="cars">
                     <img src="images/freddy-g-QNPNPk1R1y4-unsplash.jpg" alt="Premium Automobiles" loading="lazy">
                     <div class="gallery-overlay">
@@ -145,24 +143,21 @@
                     </div>
                 </div>
 
-
-                <!-- Category: Quality Vehicle components and Spare Parts -->
+                <!-- Category: Quality Vehicle Components (Placeholder) -->
                 <div class="gallery-item fade-in" data-category="parts">
                     <img src="images/erik-mclean-xCL5K4pro7I-unsplash.jpg" alt="Quality Spare Parts" loading="lazy">
                     <div class="gallery-overlay">
-                        <p>Quality Vehicle Componets & Spare Parts</p>
+                        <p>Quality Vehicle Components</p>
                     </div>
                 </div>
 
-
-                <!-- Category: Logistics & Cargo Transport -->
+                <!-- Category: Logistics & Cargo Transport (Placeholder) -->
                 <div class="gallery-item fade-in" data-category="logistics">
                     <img src="images/tasha-kostyuk-iBx1oC-8FaM-unsplash.jpg" alt="Logistics Fleet" loading="lazy">
                     <div class="gallery-overlay">
                         <p>Logistics & Cargo Transport</p>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -170,8 +165,13 @@
     <!-- Lightbox Modal -->
     <div id="lightbox" class="lightbox">
         <div class="lightbox-content">
-            <span class="lightbox-close">×</span>
+            <span class="lightbox-close">&times;</span>
             <img src="" alt="" id="lightbox-img">
+            <video id="lightbox-video" controls
+                style="display: none; max-width: 100%; max-height: 90vh; border-radius: 8px;">
+                <source src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
             <div class="lightbox-nav">
                 <button class="lightbox-prev"><i class="fas fa-chevron-left"></i></button>
                 <button class="lightbox-next"><i class="fas fa-chevron-right"></i></button>
@@ -221,7 +221,7 @@
                     </div>
                 </div>
 
-                <!-- Contact Form (formspree) -->
+                <!-- Contact Form (Formspree)-->
                 <div class="contact-form fade-in">
                     <form id="contactForm" action="https://formspree.io/f/myzvgjbe" method="POST">
                         <input type="text" name="_gotcha" style="display:none">
@@ -288,18 +288,6 @@
             <p>Thank you for contacting us, <strong><span id="popupName">Customer</span></strong>.<br>
                 We’ll reply within 24 hours!</p>
             <button onclick="closePopup()" class="btn btn-primary">OK, Thank You!</button>
-        </div>
-    </div>
-
-    <!-- Lightbox Modal -->
-    <div id="lightbox" class="lightbox">
-        <div class="lightbox-content">
-            <span class="lightbox-close">&times;</span>
-            <img src="" alt="" id="lightbox-img">
-            <div class="lightbox-nav">
-                <button class="lightbox-prev"><i class="fas fa-chevron-left"></i></button>
-                <button class="lightbox-next"><i class="fas fa-chevron-right"></i></button>
-            </div>
         </div>
     </div>
 

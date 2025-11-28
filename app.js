@@ -71,7 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       if (response.ok) {
-        // SUCCESS: Show popup with name
         const name =
           document.getElementById("name").value.trim().split(" ")[0] ||
           "Customer";
@@ -84,7 +83,6 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (err) {
       alert("No internet. Please check your connection and try again.");
     } finally {
-      // Hide loading
       btnText.style.display = "inline";
       btnLoading.style.display = "none";
       submitBtn.disabled = false;
@@ -104,45 +102,79 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.key === "Escape") closePopup();
   });
 
-  // Category-specific galleries (grid images are NOT here)
+  // Category-specific galleries (VIDEO LAST IN LOGISTICS)
   const categoryGalleries = {
     cars: [
-      { src: "gallery/client-2.jpeg" },
-      { src: "gallery/client-5.jpeg" },
-      { src: "gallery/client-22.jpeg" },
-      { src: "gallery/client-3.jpeg" },
-      { src: "gallery/client-25.jpeg" },
-      { src: "gallery/client-26.jpeg" },
-      { src: "gallery/client-27.jpeg" },
+      { src: "gallery/client-2.jpeg", alt: "Car Image 1", type: "image" },
+      { src: "gallery/client-5.jpeg", alt: "Car Image 2", type: "image" },
+      { src: "gallery/client-22.jpeg", alt: "Car Image 3", type: "image" },
+      { src: "gallery/client-3.jpeg", alt: "Car Image 4", type: "image" },
+      { src: "gallery/client-25.jpeg", alt: "Car Image 5", type: "image" },
+      { src: "gallery/client-26.jpeg", alt: "Car Image 6", type: "image" },
+      { src: "gallery/client-27.jpeg", alt: "Car Image 7", type: "image" },
     ],
     parts: [
-      { src: "gallery/client-4.jpeg" },
-      { src: "gallery/client-7.jpeg" },
-      { src: "gallery/client-8.jpeg" },
-      { src: "gallery/client-12.jpeg" },
-      { src: "gallery/client-13.jpeg" },
-      { src: "gallery/client-14.jpeg" },
-      { src: "gallery/client-16.jpeg" },
-      { src: "gallery/client-20.jpeg" },
-      { src: "gallery/client-21.jpeg" },
-      { src: "gallery/client-23.jpeg" },
+      { src: "gallery/client-4.jpeg", alt: "Parts Image 1", type: "image" },
+      { src: "gallery/client-7.jpeg", alt: "Parts Image 2", type: "image" },
+      { src: "gallery/client-8.jpeg", alt: "Parts Image 3", type: "image" },
+      { src: "gallery/client-12.jpeg", alt: "Parts Image 4", type: "image" },
+      { src: "gallery/client-13.jpeg", alt: "Parts Image 5", type: "image" },
+      { src: "gallery/client-14.jpeg", alt: "Parts Image 6", type: "image" },
+      { src: "gallery/client-16.jpeg", alt: "Parts Image 7", type: "image" },
+      { src: "gallery/client-20.jpeg", alt: "Parts Image 8", type: "image" },
+      { src: "gallery/client-21.jpeg", alt: "Parts Image 9", type: "image" },
+      { src: "gallery/client-23.jpeg", alt: "Parts Image 10", type: "image" },
     ],
     logistics: [
-      { src: "gallery/client-6.jpeg" },
-      { src: "gallery/client-11.jpeg" },
-      { src: "gallery/client-19.jpeg" },
-      { src: "gallery/client-28.jpeg" },
-      { src: "gallery/client-29.jpeg" },
-      { src: "gallery/client-30.jpeg" },
-      { src: "gallery/client-31.jpeg" },
-      { src: "gallery/client-1.jpeg" },
-      { src: "gallery/client-10.jpeg" },
+      { src: "gallery/client-6.jpeg", alt: "Logistics Image 1", type: "image" },
+      {
+        src: "gallery/client-11.jpeg",
+        alt: "Logistics Image 2",
+        type: "image",
+      },
+      {
+        src: "gallery/client-19.jpeg",
+        alt: "Logistics Image 3",
+        type: "image",
+      },
+      {
+        src: "gallery/client-28.jpeg",
+        alt: "Logistics Image 4",
+        type: "image",
+      },
+      {
+        src: "gallery/client-29.jpeg",
+        alt: "Logistics Image 5",
+        type: "image",
+      },
+      {
+        src: "gallery/client-30.jpeg",
+        alt: "Logistics Image 6",
+        type: "image",
+      },
+      {
+        src: "gallery/client-31.jpeg",
+        alt: "Logistics Image 7",
+        type: "image",
+      },
+      { src: "gallery/client-1.jpeg", alt: "Logistics Image 8", type: "image" },
+      {
+        src: "gallery/client-10.jpeg",
+        alt: "Logistics Image 9",
+        type: "image",
+      },
+      {
+        src: "gallery/client-32.mp4",
+        alt: "Logistics Operations Video",
+        type: "video",
+      }, // VIDEO LAST
     ],
   };
 
-  // Lightbox Gallery - Category specific
+  // Lightbox Gallery - Category specific with VIDEO support
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightbox-img");
+  const lightboxVideo = document.getElementById("lightbox-video");
   const lightboxClose = document.querySelector(".lightbox-close");
   const lightboxPrev = document.querySelector(".lightbox-prev");
   const lightboxNext = document.querySelector(".lightbox-next");
@@ -162,9 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function openLightbox() {
     if (currentCategoryImages.length === 0) return;
-    const img = currentCategoryImages[currentImageIndex];
-    lightboxImg.src = img.src;
-    lightboxImg.alt = img.alt;
+    showItem(currentImageIndex);
     lightbox.classList.add("active");
     document.body.style.overflow = "hidden";
   }
@@ -172,12 +202,28 @@ document.addEventListener("DOMContentLoaded", function () {
   function closeLightbox() {
     lightbox.classList.remove("active");
     document.body.style.overflow = "auto";
+    // Pause any playing video
+    if (lightboxVideo.style.display === "block") {
+      lightboxVideo.pause();
+    }
   }
 
-  function showImage(index) {
-    const img = currentCategoryImages[index];
-    lightboxImg.src = img.src;
-    lightboxImg.alt = img.alt;
+  function showItem(index) {
+    const item = currentCategoryImages[index];
+
+    if (item.type === "video") {
+      // Show video, hide image
+      lightboxImg.style.display = "none";
+      lightboxVideo.style.display = "block";
+      lightboxVideo.src = item.src;
+      lightboxVideo.load();
+    } else {
+      // Show image, hide video
+      lightboxImg.style.display = "block";
+      lightboxVideo.style.display = "none";
+      lightboxImg.src = item.src;
+      lightboxImg.alt = item.alt;
+    }
   }
 
   lightboxClose.addEventListener("click", closeLightbox);
@@ -186,12 +232,12 @@ document.addEventListener("DOMContentLoaded", function () {
     currentImageIndex =
       (currentImageIndex - 1 + currentCategoryImages.length) %
       currentCategoryImages.length;
-    showImage(currentImageIndex);
+    showItem(currentImageIndex);
   });
   lightboxNext.addEventListener("click", (e) => {
     e.stopPropagation();
     currentImageIndex = (currentImageIndex + 1) % currentCategoryImages.length;
-    showImage(currentImageIndex);
+    showItem(currentImageIndex);
   });
 
   lightbox.addEventListener("click", (e) => {
