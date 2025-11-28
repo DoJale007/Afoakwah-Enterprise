@@ -7,9 +7,6 @@
 /* Poppins font import */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-
-
-
 /* Root Variables */
 :root {
     --primary-color: #003399;
@@ -19,7 +16,7 @@
     --light-gray: #f5f5f5;
     --medium-gray: #e0e0e0;
     --dark-gray: #666666;
-    --font-primary: "Open Sans", sans-serif;;
+    --font-primary: "Open Sans", sans-serif;
     --font-secondary: "Lato", sans-serif;
     --font-heading: "Poppins", sans-serif;
     --transition: all 0.3s ease;
@@ -72,7 +69,7 @@ body {
     padding: 1rem 20px;
 }
 
-.logo-img{
+.logo-img {
     height: 45px;
     width: auto;
     max-width: 150px;
@@ -372,42 +369,72 @@ section {
     transform: translateY(0);
 }
 
-
-
-.sub-title {
-    margin: 40px 0 20px;
-    font-size: 1.8rem;
-    font-family: var(--font-heading);
-    color: var(--primary-color);
-    text-align: center;
-}
-
-.photo-gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.photo-gallery-grid img {
+/* Lightbox Styles */
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 8px;
-    transition: var(--transition);
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
     cursor: pointer;
 }
 
-.photo-gallery-grid img:hover {
-    transform: scale(1.03);
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+.lightbox.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.photo-gallery-grid video.gallery-video {
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    object-fit: cover;
+.lightbox-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+#lightbox-img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 2.5rem;
+    cursor: pointer;
+    z-index: 10000;
+}
+
+.lightbox-nav button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 51, 153, 0.8);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+}
+
+.lightbox-prev {
+    left: 20px;
+}
+
+.lightbox-next {
+    right: 20px;
+}
+
+.lightbox-nav button:hover {
+    background: var(--primary-color);
 }
 
 /* Contact Section */
@@ -478,6 +505,13 @@ section {
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(5px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.popup-overlay.active {
+    display: flex;
+    opacity: 1;
 }
 
 .popup-content {
@@ -485,13 +519,14 @@ section {
     padding: 2.5rem;
     border-radius: 15px;
     text-align: center;
-    max-width: 400px;
-    animation: popupFadeIn 0.4s ease;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    animation: popupScale 0.4s ease;
 }
 
 .popup-content i {
-    font-size: 4rem;
+    font-size: 4.5rem;
     color: #003399;
     margin-bottom: 1rem;
 }
@@ -508,19 +543,19 @@ section {
     line-height: 1.5;
 }
 
-.popup-content .btn {
-    padding: 10px 40px;
+.popup-content button {
+    margin: 0 auto;
 }
 
-@keyframes popupFadeIn {
+@keyframes popupScale {
     from {
+        transform: scale(0.8);
         opacity: 0;
-        transform: scale(0.85);
     }
 
     to {
-        opacity: 1;
         transform: scale(1);
+        opacity: 1;
     }
 }
 
@@ -623,9 +658,26 @@ section {
     }
 }
 
+/* Button loading spinner */
+.btn-loading::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
 
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
     .hamburger {
         display: flex;
@@ -693,91 +745,5 @@ section {
     .btn {
         width: 100%;
         justify-content: center;
-    }
-}
-
-
-
-/* Button loading spinner */
-.btn-loading::before {
-    content: "";
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid #fff;
-    border-radius: 50%;
-    border-top-color: transparent;
-    animation: spin 1s linear infinite;
-    margin-right: 8px;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* Better popup transition */
-.popup-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(8px);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.popup-overlay.active {
-    display: flex;
-    opacity: 1;
-}
-
-.popup-content {
-    background: white;
-    padding: 2.5rem;
-    border-radius: 16px;
-    text-align: center;
-    max-width: 420px;
-    width: 90%;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-    animation: popupScale 0.4s ease;
-}
-
-.popup-content i {
-    font-size: 4.5rem;
-    color: #003399;
-    margin-bottom: 1rem;
-}
-
-.popup-content button{
-    margin: 0 auto;
-}
-
-@keyframes popupScale {
-    from {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-/* Print Styles */
-@media print {
-
-    .navbar,
-    .whatsapp-float,
-    .hero-buttons {
-        display: none;
     }
 }
